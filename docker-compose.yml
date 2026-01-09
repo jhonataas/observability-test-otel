@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.93.0
+    container_name: otel-collector
+    command: ["--config=/etc/otelcol/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otelcol/otel-collector-config.yaml
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+
+  server-api:
+    build: ./server_api
+    container_name: server-api
+    ports:
+      - "8081:8081"
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+    depends_on:
+      - otel-collector
+
+  client-api:
+    build: ./client_api
+    container_name: client-api
+    ports:
+      - "8080:8080"
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+    depends_on:
+      - otel-collector
