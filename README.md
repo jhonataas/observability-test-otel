@@ -5,6 +5,7 @@ Demonstrar observabilidade distribuída em Python usando OpenTelemetry, incluind
 
 ## Arquitetura
 client-api → server-api → external API
+
 (OTLP → OpenTelemetry Collector)
 
 ## Stack
